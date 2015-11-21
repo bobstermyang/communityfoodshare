@@ -67,11 +67,17 @@ function cfs_directory_install(){
 
 function _cfs_script(){
     
-    wp_register_style( 'prefix-style', plugins_url('css/cfs.css',dirname(__FILE__)));
-    wp_enqueue_style( 'prefix-style' );
+    wp_register_style( 'cfs-style', plugins_url('css/cfs.css',dirname(__FILE__)));
+    wp_enqueue_style( 'cfs-style' );
     
-    wp_register_script( 'prefix-script',  plugins_url('js/cfs.js',dirname(__FILE__)),array(),'1.0.0',true );
-    wp_enqueue_script( 'prefix-script' );   
+    wp_register_script( 'cfs-validation',  plugins_url('js/validation.js',dirname(__FILE__)),array(),'1.0.0',true );
+    wp_enqueue_script( 'cfs-validation' );
+    
+    wp_register_script( 'cfs-script',  plugins_url('js/cfs.js',dirname(__FILE__)),array(),'1.0.0',true );
+    // Localize the script with new data
+    $cfs_value = array('ajax' => admin_url('admin-ajax.php'));
+    wp_localize_script( 'cfs-script', 'cfs', $cfs_value );
+    wp_enqueue_script( 'cfs-script' );   
 }  
 
 /*
@@ -82,11 +88,11 @@ function _cfs_script(){
 
 function _cfs_admin_script(){
     
-    wp_register_style( 'prefix-style', plugins_url('css/cfs_admin.css',dirname(__FILE__)));
-    wp_enqueue_style( 'prefix-style' );
+    wp_register_style( 'cfs-style', plugins_url('css/cfs_admin.css',dirname(__FILE__)));
+    wp_enqueue_style( 'cfs-style' );
     
-    wp_register_script( 'prefix-script',  plugins_url('js/cfs_admin.js',dirname(__FILE__)),array(),'1.0.0',true );
-    wp_enqueue_script( 'prefix-script' );   
+    wp_register_script( 'cfs-script',  plugins_url('js/cfs_admin.js',dirname(__FILE__)),array(),'1.0.0',true );
+    wp_enqueue_script( 'cfs-script' );   
 }  
 
 /*
@@ -106,8 +112,14 @@ function register_cfs_menu(){
       add_submenu_page( 'cfs_donator', 'General Settings', 'Settings', 'manage_options', 'cfs_settings', '_cfs_settings_callback');
 }
 
-function _cfs_users_callback(){
-      
+function _cfs_users_callback(){      
+      require_once('class.listUsers.php');
+      $cfsListUsers = new cfsListUsers();
+      $cfsListUsers->prepare_items();
+      $cfsListUsers->search_box('search', 'cfs_search');
+      echo '<div class="wrap"><h2>Individual Users</h2>';
+      $cfsListUsers->display();
+      echo '</div>';
 }
 
 /*
@@ -117,11 +129,11 @@ function _cfs_users_callback(){
  */
 
 function _donator_list_callback(){      
-      if(isset($_GET['sub']) && $_GET['sub'] == 'manual_donation'){            
-            require_once(CFS_PLUGIN_URL.'/template/template-new-donator.php');            
+      if(isset($_GET['sub']) && $_GET['sub'] == 'manual_donation'){
+            
       }else{
-            require_once('class.listUsers.php');
-            $cfsListUsers = new cfsListUsers();
+            require_once('class.listDonators.php');
+            $cfsListUsers = new cfsListDonators();
             $cfsListUsers->prepare_items();
             $cfsListUsers->search_box('search', 'cfs_search');
             echo '<div class="wrap"><h2>Donations <a href="admin.php?page=cfs_donator&sub=manual_donation" class="add-new-h2">Add Manual Donation</a></h2>';
@@ -293,6 +305,7 @@ function cfs_post_type() {
 	);
 	register_post_type( 'team', $args );
 
+ 
 }
 
 /*
@@ -367,7 +380,6 @@ function _set_cfs_data_column_callback( $column, $post_id ) {
 *   Detail          : Handle columns list of grocery post type
 */
 
-
 function _set_grocery_list_columns_callback($columns) {
       global $post;
     unset($columns['date']);
@@ -384,4 +396,154 @@ function _set_grocery_data_column_callback( $column, $post_id ) {
             break;
 
     }
+}
+
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 21/11/2015
+*   Detail          : Get Registerd Company List Base On Search
+*/
+
+function get_company_list($company_name = ''){
+      global $wodb;
+      
+      $args=array(
+        'post_type' => 'company',
+        'post_status' => 'publish',
+        's'           =>  $company_name      
+      );
+      $company_list = array();
+      $wp_query = new WP_Query($args);
+      
+      if( $wp_query->have_posts() ) {
+            while ($wp_query->have_posts()) : $wp_query->the_post();
+                  $user_info = get_userdata($wp_query->post->post_author);
+                  $userName = $user_info->display_name;
+                  if($user_info->first_name != ''){
+                        $userName = $user_info->first_name .' '.$user_info->last_name;
+                  }
+                  $company_list['data'][] = array(
+                        'id'    =>    $wp_query->post->ID,
+                        'name'    =>  $wp_query->post->post_title,
+                        'owner'   =>  $userName 
+                  );        
+            endwhile;
+            $company_list['found_posts'] = $wp_query->found_posts;
+      }
+      wp_reset_query();
+      return $company_list;
+}
+
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 21/11/2015
+*   Detail          : Get Team List Base On Selected Company
+*/
+
+function get_team_list($company_id){
+      
+      global $wodb;
+      
+      $args=array(
+        'post_type' => 'team',
+        'post_status' => 'publish',
+         'meta_query' =>  array(
+                  array(
+                      'key'     => 'company_id',
+                      'value'   => $company_id,
+                  ),
+            )
+      );
+      $team_list = array();
+      $wp_query = new WP_Query($args);
+      
+      if( $wp_query->have_posts() ) {
+            while ($wp_query->have_posts()) : $wp_query->the_post();
+                  $user_info = get_userdata($wp_query->post->post_author);
+                  $userName = $user_info->display_name;
+                  if($user_info->first_name != ''){
+                        $userName = $user_info->first_name .' '.$user_info->last_name;
+                  }
+                  $team_list['data'][] = array(
+                        'id'    =>    $wp_query->post->ID,
+                        'name'    =>  $wp_query->post->post_title,
+                        'owner'   =>  $userName 
+                  );        
+            endwhile;
+            $team_list['found_posts'] = $wp_query->found_posts;
+      }
+      wp_reset_query();
+      return $team_list;
+}
+
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 21/11/2015
+*   Detail          : Save company/team and user info
+*/
+
+function _register_new_user_callback(){
+      global $post;
+      
+            $post_id = 0;
+            $page_url = $_POST['page_url'];
+            $userdata = array(
+                  'user_login'  =>  $_POST['txtUserName'],
+                  'user_pass'   =>  $_POST['txtPassword'],
+                  'user_email'  =>  $_POST['txtEmail'],
+                  'first_name'  =>  $_POST['txtFirstName'],
+                  'last_name'   =>  $_POST['txtLastName'],
+                  'role'        =>  'donator'
+              );
+            $user_id = wp_insert_user($userdata);
+            if(is_wp_error($user_id)){
+                  echo json_encode(array('error' => $user_id->get_error_message()));
+                  die();
+                  wp_redirect($page_url.'?step=3&cgoal='.$_REQUEST['cgoal'].'&cname='.$_REQUEST['cname'].'&donator=new&error='.$user_id->get_error_message());
+                  exist();
+            }
+            if($user_id){
+                  update_user_meta($user_id, 'address1', $_POST['txtStreet1']);
+                  update_user_meta($user_id, 'address2', $_POST['txtStreet2']);
+                  update_user_meta($user_id, 'city', $_POST['txtCity']);
+                  update_user_meta($user_id, 'state', $_POST['txtState']);
+                  update_user_meta($user_id, 'pincode', $_POST['txtZipcode']);
+                  update_user_meta($user_id, 'country', $_POST['comboCountry']);
+                  update_user_meta($user_id, 'phone', $_POST['txtNumber']);
+                  update_user_meta($user_id, 'gift_notification', $_POST['chkGiftNotification']);
+                  update_user_meta($user_id, 'subscriber', $_POST['chkSubscriber']);
+                  
+                  $post_id = wp_insert_post(
+                        array(
+                              'post_title'      =>    $_POST['cname'],
+                              'post_type'       =>    'company',
+                              'post_status'     =>    'publish',
+                              'post_author'     =>    $user_id
+                        )
+                  );
+                  if($post_id){
+                        update_post_meta($post_id, '_donation_goal', $_POST['cgoal']);
+                  }
+            }
+            if($post_id && $user_id){
+                  echo json_encode(array('success' => $page_url.'?step=4&cgoal=1'));
+                  die();
+            }else{
+                  echo json_encode(array('error' => 'There is some issue. Please try after sometime!'));
+                  die();
+            }
+      
+ }
+ 
+ 
+ /*  
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 21/11/2015
+*   Detail          : Get all query fields
+  */
+
+function get_all_query_fields(){
+      foreach($_GET as $key => $value){
+            echo '<input type="hidden" name="'.$key.'" value="'.$value.'" />';
+      }     
 }

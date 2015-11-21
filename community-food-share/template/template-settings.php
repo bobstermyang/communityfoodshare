@@ -37,7 +37,7 @@
                   <h3>Donation Goals:</h3>
                   <table class="form-table">
                         <tr>
-                              <th><label for="cfs_settings[bussiness_goal]">Bussiness</label></th>
+                              <th><label for="cfs_settings[bussiness_goal]">Business</label></th>
                               <td><input name="cfs_settings[bussiness_goal]" id="cfs_settings[bussiness_goal]" value="<?php echo $bussiness_goal;?>" />$</td>
                         </tr>
                         <tr>

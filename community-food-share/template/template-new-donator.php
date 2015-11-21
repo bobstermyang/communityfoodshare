@@ -36,7 +36,7 @@
                       <th><label for="cfs_donator[user_role]">Payer Role</label></th>
                       <td>
                       <select name="cfs_donator[user_role]" id="cfs_donator[user_role]">
-                                  <option value="bussiness">Bussiness</option>
+                                  <option value="business">Business</option>
                                   <option value="team">Team</option>
                                   <option value="individual">Individual</option>
                             </select>

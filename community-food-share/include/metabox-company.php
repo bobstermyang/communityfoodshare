@@ -111,7 +111,7 @@ class companyMetabox {
 		echo '<label>Donation Goal Amount</label>';
 		echo '<input type="text" id="donation_goal" name="donation_goal"';
                 echo ' value="' . esc_attr( $goal ) . '" size="25" />$<br />';
-				
+		/*		
 		echo '<label>'.($post->post_type == 'company' ? 'Owner' : 'Leader').'</label>';
 		$users = get_users();
 		echo '<select name="cfs_users" id="cfs_users">';
@@ -119,5 +119,6 @@ class companyMetabox {
 			echo '<option '.($post->post_author == $user->id ? 'selected' : '').' value="'.$user->id.'">'.$user->display_name.'</option>';
 		}
 		echo '</select>';
+		*/
 	}
 }

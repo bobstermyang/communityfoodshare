@@ -12,6 +12,7 @@ define( 'CFS_PLUGIN_URL', plugin_dir_path(__FILE__) );
 require_once("include/functions.php");
 require_once("include/metabox-grocery.php");
 require_once("include/metabox-company.php");
+require_once("include/shortcodes.php");
 require_once("data/donator.php");
 /*
 *   Devloper Name   : Mitesh Solanki
@@ -91,4 +92,13 @@ add_filter( 'manage_company_posts_columns', '_set_cfs_list_columns_callback' );
 add_filter( 'manage_team_posts_columns', '_set_cfs_list_columns_callback' );
 add_action( 'manage_company_posts_custom_column' , '_set_cfs_data_column_callback', 10, 2 );
 add_action( 'manage_team_posts_custom_column' , '_set_cfs_data_column_callback', 10, 2 );
+
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 21/11/2015
+*   Detail          : Handle ajax form register user event
+*/
+
+add_action('wp_ajax_register_new_user', '_register_new_user_callback');
+add_action('wp_ajax_nopriv_register_new_user', '_register_new_user_callback');
 

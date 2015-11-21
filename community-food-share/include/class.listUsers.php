@@ -9,14 +9,12 @@
     }
     class cfsListUsers extends WP_List_Table {
         var $example_data = array();
-        var $tableName='';
         /** ************************************************************************
         * REQUIRED. Set up a constructor that references the parent constructor. We 
         * use the parent reference to set some default configs.
         ***************************************************************************/
         function __construct(){
             global $status, $page,$wpdb;
-            $this->tableName = $wpdb->prefix."cfs_donator";
             $this->example_data =$this->fnGetTransactionsData();            
             parent::__construct( array(
                 'singular'  => 'Transaction',     //singular name of the listed records
@@ -27,27 +25,13 @@
         }       
         function fnGetTransactionsData(){
             global $wpdb;
-            $data=array(); 
-            $query="SELECT * FROM ".$this->tableName;
-            if(isset($_REQUEST['pt_payment_methods']) && $_REQUEST['pt_payment_methods']!=="0"){
-                $query.=" AND method='".$_REQUEST['pt_payment_methods']."'";
-            }
-            if(isset($_REQUEST['pt_payment_type']) && $_REQUEST['pt_payment_type']!=="0"){
-                $query.=" AND type='".$_REQUEST['pt_payment_type']."'";
-            } 
-            if(isset($_REQUEST['s']) && $_REQUEST['s']!==""){
-                $query.=" AND transid = '".$_REQUEST['s']."' OR subid ='".$_REQUEST['s']."' OR name LIKE '%".$_REQUEST['s']."%' OR details LIKE '%".$_REQUEST['s']."%' ";
+            $data=array();
+            $blogusers = get_users( 'orderby=nicename&role=donator' );
+            // Array of WP_User objects.
+            foreach ( $blogusers as $user ) {
+                $data[] = array('id' => $user->ID, 'user_name' => $user->display_name, 'donation_goal' => get_post_meta($user->ID, '', true), 'received_donation' => '0 $');
             }
             
-            $myrows = $wpdb->get_results($query);         
-            foreach($myrows as $rows){
-                $transDetails = json_decode($rows->trans_detail, true);
-                $userDetail = get_userdata($rows->user_id);
-                $user_type = $rows->user_role != '' ? $rows->user_role : get_user_meta($rows->user_id, 'user_type', true);
-                
-                $payerName = ($rows->donar_name !='' ? $rows->donar_name : $userDetail->first_name .' '.$userDetail->last_name);
-                $data[]=array('id'=>$rows->id,'transid'=>$rows->transaction_id, 'method'=>$rows->payment_type, 'payername'=>$payerName,'type'=>$user_type,'amount'=>$rows->amount,'show_amount'=> ($rows->show_amount ? 'Yes' : 'No'),'timestamp'=>$rows->timestamp,'is_gift'=>$rows->is_gift ? 'Yes' : 'No');
-            }
             return $data;
         }
         function extra_tablenav($which) {
