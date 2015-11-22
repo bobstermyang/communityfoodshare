@@ -85,6 +85,9 @@ jQuery(function(){
                         jQuery('#frmDonation #inner_container .inner p').html('Thank you for donation!');
 						jQuery('#inner_container .field').hide();
 						jQuery('#commandButton_3_0').remove();
+						window.setTimeout(function(){
+							location.reload();
+						},1000);
                      }
 				  }
 		 });

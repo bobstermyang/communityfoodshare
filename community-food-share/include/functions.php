@@ -732,7 +732,6 @@ function insert_attachment($file_handler,$post_id,$setthumb='false')
 *   Date            : 22/11/2015
 *   Detail          : Handle Payment Request
 */
-//add_shortcode('test', '_send_payment_request_callback');
 
 function _send_payment_request_callback(){
       
@@ -775,6 +774,8 @@ function _send_payment_request_callback(){
                         'team_id'   =>  $_POST['team_id'],
                         'payment_type'   =>  'Online',
                         'amount'   =>  $amount,
+                        'donator_name'    =>     $_POST['donator_name'], 
+                        'donator_email'    =>     $_POST['donator_email'], 
                         'trans_detail'=> serialize($result->transaction->_attributes)
                   );
             $objDonator = new tblDonator();
@@ -859,6 +860,14 @@ function cfs_load_company_info()
                     <form action="javascript:void(0);" method="get" class="modal_center">
                         <div class="modal_align_1">
                             <div class="affiliate-grid-container">
+                              
+                                <div class="affiliate-grid">
+                                    <input type="radio" name="org_selection" checked="checked" value="0" id="input1" class="affiliate-select"/>
+                                    <label for="input1">
+                                    <img src="<?php echo plugins_url('images/1.jpg',dirname(__FILE__)) ?>" class="img-circle" alt="" class="affiliate-prod-img"/>
+                                    </label>
+                                    <p>Not Employee</p>
+                                </div>
                                 <?php
                                     foreach($team_list as $team)
                                     {
@@ -894,6 +903,8 @@ function cfs_load_company_info()
                     <!--p class="section_p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p-->
                 </div>
                 <div class="field">
+                <input type="text" name="donator_name"  id="donator_name" value="" placeholder="Enter Your Name"  /><br />
+                <input type="text" name="donator_email"  id="donator_email" value="" placeholder="Enter Your Email"  /><br />
                 <input type="text" name="credit_card"  id="credit_card" value="" placeholder="Enter Credit Card Number"  /><br />                <input type="text" name="expire_card"  id="expire_card" placeholder="Month/Year"  />  <br />
                 <input type="text" name="cvv"  id="cvv" placeholder="Enter CVV"  />  <br />
                 <input type="text" name="amount"  placeholder="Donation Amount"  />  <br />
@@ -911,3 +922,21 @@ function cfs_load_company_info()
     }
 }
 
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 22/11/2015
+*   Detail          : Get hightest donation company
+*/
+
+function get_latest_donation_company(){
+      global $wpdb;
+      $query = 'SELECT ct.company_id, sum(amount) AS amount FROM `'.$wpdb->prefix.'cfs_donator` AS cd LEFT JOIN `'.$wpdb->prefix.'cfs_team` AS ct ON cd.team_id = ct.id GROUP BY ct.company_id ORDER BY amount DESC LIMIT 0,3';
+      $comapny_result = $wpdb->get_results($query);
+      $top_company = array();
+      $number = 1;
+      foreach($comapny_result as $company){
+            //$top_company[$company->company_id] = $comapny->amount;
+            $top_company[$company->company_id] = $number++;     
+      }
+      return $top_company;
+}

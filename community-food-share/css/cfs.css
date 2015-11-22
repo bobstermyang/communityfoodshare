@@ -435,3 +435,18 @@ a.linkcls {
     padding:0;
     width: 100%;
 }
+
+.top_rated_company{
+    background-image: url("../images/award_big.png");
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    font-size: 32px;
+    height: 100px;
+    line-height: 70px;
+    position: absolute;
+    text-align: center;
+    width: 76px;
+    right: 0;
+    top: 0;
+    background-position: left top
+}
