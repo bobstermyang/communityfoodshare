@@ -2,7 +2,7 @@
 
 class tblDonator {
     var $table_name = '';
-    var $table_fields = array('user_id', 'amount', 'payment_type', 'user_role', 'is_gift', 'show_amount', 'donar_name', 'donar_address', 'trans_detail', 'timestamp', 'transaction_id');
+    var $table_fields = array('trans_id', 'team_id', 'payment_type', 'show_amount', 'donator_name', 'donator_email', 'amount', 'trans_detail');
     
     function __construct(){
         global $wpdb;
@@ -17,7 +17,9 @@ class tblDonator {
                 $insertData[$key] = $value;
             }
         }
-        $wpdb->insert($this->table_name,$insertData);
+        
+        $insert_id = $wpdb->insert($this->table_name,$insertData);
+        
         return $wpdb->insert_id;
     }
     

@@ -29,6 +29,9 @@
             global $wpdb;
             $data=array(); 
             $query="SELECT * FROM ".$this->tableName;
+            if(isset($_REQUEST['tid'])){
+                $query .= ' WHERE team_id ='.$_REQUEST['tid'];
+            }
             if(isset($_REQUEST['pt_payment_methods']) && $_REQUEST['pt_payment_methods']!=="0"){
                 $query.=" AND method='".$_REQUEST['pt_payment_methods']."'";
             }
@@ -42,11 +45,10 @@
             $myrows = $wpdb->get_results($query);         
             foreach($myrows as $rows){
                 $transDetails = json_decode($rows->trans_detail, true);
-                $userDetail = get_userdata($rows->user_id);
-                $user_type = $rows->user_role != '' ? $rows->user_role : get_user_meta($rows->user_id, 'user_type', true);
+                $teamname = get_team_name($rows->team_id);
                 
-                $payerName = ($rows->donar_name !='' ? $rows->donar_name : $userDetail->first_name .' '.$userDetail->last_name);
-                $data[]=array('id'=>$rows->id,'transid'=>$rows->transaction_id, 'method'=>$rows->payment_type, 'payername'=>$payerName,'type'=>$user_type,'amount'=>$rows->amount,'show_amount'=> ($rows->show_amount ? 'Yes' : 'No'),'timestamp'=>$rows->timestamp,'is_gift'=>$rows->is_gift ? 'Yes' : 'No');
+                $payerName = ($rows->donator_name !='' ? $rows->donator_name : '');
+                $data[]=array('id'=>$rows->id,'transid'=>$rows->trans_id, 'method'=>$rows->payment_type, 'payername'=>$payerName,'teamname'=>$teamname,'amount'=>$rows->amount,'show_amount'=> ($rows->show_amount ? 'Yes' : 'No'),'timestamp'=>$rows->timestamp,);
             }
             return $data;
         }
@@ -97,8 +99,8 @@
                 case 'payername':
                 case 'type':                
                 case 'amount':              
-                case 'show_amount':            
-                case 'is_gift':            
+                case 'show_amount':
+                case 'teamname':
                 case 'timestamp':                            
                     return $item[$column_name];
                 default:
@@ -144,10 +146,9 @@
             'transid'     => 'Transaction ID', 
             'method'  => 'Payment Method', 
             'payername'    => 'Payer Name',                          
-            'type' =>  'Payer Role',                    
+            'teamname' =>  'Team Name',                    
             'amount'  => 'Amount',
             'show_amount'   =>  'Hide Amount?',
-            'is_gift'   =>  'Is Gifted?',
             'timestamp'  => 'Date'
             );
           

@@ -104,21 +104,28 @@ class companyMetabox {
 		wp_nonce_field( 'cfs_company_metabox', 'cfs_nonce' );
 
 		// Use get_post_meta to retrieve an existing value from the database.
-		$goal = get_post_meta( $post->ID, '_donation_goal', true );
+		$_no_of_employees = get_post_meta( $post->ID, '_no_of_employees', true );
+		$_company_goal = get_post_meta( $post->ID, '_company_goal', true );
+		$_contact_email = get_post_meta( $post->ID, '_contact_email', true );
+		$_contact_number = get_post_meta( $post->ID, '_contact_number', true );
 
 		// Display the form, using the current value.
 		
+		echo '<label>No of Employees</label>';
+		echo '<input type="text" id="_no_of_employees" name="_no_of_employees"';
+                echo ' value="' . esc_attr( $_no_of_employees ) . '" size="25" /><br />';
+		
 		echo '<label>Donation Goal Amount</label>';
-		echo '<input type="text" id="donation_goal" name="donation_goal"';
-                echo ' value="' . esc_attr( $goal ) . '" size="25" />$<br />';
-		/*		
-		echo '<label>'.($post->post_type == 'company' ? 'Owner' : 'Leader').'</label>';
-		$users = get_users();
-		echo '<select name="cfs_users" id="cfs_users">';
-		foreach($users as $user){
-			echo '<option '.($post->post_author == $user->id ? 'selected' : '').' value="'.$user->id.'">'.$user->display_name.'</option>';
-		}
-		echo '</select>';
-		*/
+		echo '<input type="text" id="_company_goal" name="_company_goal"';
+                echo ' value="' . esc_attr( $_company_goal ) . '" size="25" />$<br />';
+		
+		echo '<label>Primary Contact Email</label>';
+		echo '<input type="text" id="_contact_email" name="_contact_email"';
+                echo ' value="' . esc_attr( $_contact_email ) . '" size="25" /><br />';
+		
+		echo '<label>Primary Phone Number</label>';
+		echo '<input type="text" id="_contact_number" name="_contact_number"';
+                echo ' value="' . esc_attr( $_contact_number ) . '" size="25" /><br />';
+		
 	}
 }

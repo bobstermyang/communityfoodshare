@@ -7,32 +7,42 @@
     if( ! class_exists('WP_Screen') ) {
         require_once( ABSPATH . 'wp-admin/includes/screen.php' );
     }
-    class cfsListUsers extends WP_List_Table {
-        var $example_data = array();
+    class cfsTeams extends WP_List_Table {
+        var $table_data = array();
         /** ************************************************************************
         * REQUIRED. Set up a constructor that references the parent constructor. We 
         * use the parent reference to set some default configs.
         ***************************************************************************/
         function __construct(){
             global $status, $page,$wpdb;
-            $this->example_data =$this->fnGetTransactionsData();            
+            $this->table_data =$this->fnGetTeamData();            
             parent::__construct( array(
-                'singular'  => 'Transaction',     //singular name of the listed records
-                'plural'    => 'Transactions',    //plural name of the listed records
+                'singular'  => 'Team',     //singular name of the listed records
+                'plural'    => 'Teams',    //plural name of the listed records
                 'ajax'      => false        //does this table support ajax?
             ));
           
         }       
-        function fnGetTransactionsData(){
+        function fnGetTeamData(){
             global $wpdb;
             $data=array();
-            $blogusers = get_users( 'orderby=nicename&role=donator' );
-            // Array of WP_User objects.
-            foreach ( $blogusers as $user ) {
-                $data[] = array('id' => $user->ID, 'user_name' => $user->display_name, 'donation_goal' => get_post_meta($user->ID, '', true), 'received_donation' => '0 $');
+            $query = 'SELECT * FROM '.$wpdb->prefix.'cfs_team';
+            if(isset($_REQUEST['cid'])){
+                $query .= ' WHERE company_id ='.$_REQUEST['cid'];
             }
             
+            $teams = $wpdb->get_results($query);
+            
+            // Array of team objects.
+            foreach ( $teams as $team ) {
+                $donation = $this->get_team_donation($team->id);
+                $data[] = array('id' => $team->id, 'team_name' => $team->team_name, 'company_name' => get_the_title($team->company_id), 'received_donation' => ($donation ? $donation : 0 ).' $', 'view_donators' => '<a href="admin.php?page=cfs_donator&tid='.$team->id.'">View Donators</a>');
+            }
             return $data;
+        }
+        function get_team_donation($team_id){
+            global $wpdb;
+            return $wpdb->get_var('SELECT SUM(`amount`) FROM '.$wpdb->prefix.'cfs_donator'.' WHERE team_id ='.$team_id);
         }
         function extra_tablenav($which) {
             /*
@@ -76,14 +86,10 @@
         function column_default($item, $column_name){
             switch($column_name){            
                 case 'cb':
-                case 'transid':
-                case 'method':
-                case 'payername':
-                case 'type':                
-                case 'amount':              
-                case 'show_amount':            
-                case 'is_gift':            
-                case 'timestamp':                            
+                case 'team_name':
+                case 'company_name':
+                case 'received_donation':
+                case 'view_donators':                        
                     return $item[$column_name];
                 default:
                     return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -125,14 +131,10 @@
             $arrPost=isset($_REQUEST)?$_REQUEST:array();            
             $columns = array(  
             'cb'        => '<input type="checkbox" />',
-            'transid'     => 'Transaction ID', 
-            'method'  => 'Payment Method', 
-            'payername'    => 'Payer Name',                          
-            'type' =>  'Payer Role',                    
-            'amount'  => 'Amount',
-            'show_amount'   =>  'Hide Amount?',
-            'is_gift'   =>  'Is Gifted?',
-            'timestamp'  => 'Date'
+            'team_name'     => 'Team Name', 
+            'company_name'  => 'Company Name', 
+            'received_donation'    => 'Received Donation Amount',                          
+            'view_donators' =>  '',                    
             );
           
             return $columns;
@@ -155,16 +157,8 @@
         **************************************************************************/
         function get_sortable_columns() {
             $sortable_columns = array(
-            'transid'     => array('transid',false),     //true means it's already sorted
-            'method'    => array('method',false),            
-            'subid'  => array('subid',false),
-            'payername'     => array('payername',false),     //true means it's already sorted     
-            'email'  => array('email',false),     
-            'contactNo'  => array('contactNo',false),
-            'type'    => array('type',false),            
-            'amount'  => array('amount',false),
-            'status'     => array('status',true),
-            'timestamp'     => array('time',true)
+            'team_name'     => array('team_name',false),     //true means it's already sorted
+            'company_name'    => array('company_name',false),            
             );
             $sortable_columns = array();
             return $sortable_columns;
@@ -273,7 +267,7 @@
         * use sort and pagination data to build a custom query instead, as you'll
         * be able to use your precisely-queried data immediately.
         */
-        $data = $this->example_data;
+        $data = $this->table_data;
 
 
         /**

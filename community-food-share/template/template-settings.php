@@ -33,23 +33,6 @@
                         </tr>
                   </table>
             </fieldset>
-            <fieldset>
-                  <h3>Donation Goals:</h3>
-                  <table class="form-table">
-                        <tr>
-                              <th><label for="cfs_settings[bussiness_goal]">Business</label></th>
-                              <td><input name="cfs_settings[bussiness_goal]" id="cfs_settings[bussiness_goal]" value="<?php echo $bussiness_goal;?>" />$</td>
-                        </tr>
-                        <tr>
-                              <th><label for="cfs_settings[team_goal]">Team</label></th>
-                              <td><input name="cfs_settings[team_goal]" id="cfs_settings[team_goal]" value="<?php echo $team_goal;?>" />$</td>
-                        </tr>
-                        <tr>
-                              <th><label for="cfs_settings[individual_goal]">Individual</label></th>
-                              <td><input name="cfs_settings[individual_goal]" id="cfs_settings[individual_goal]" value="<?php echo $individual_goal;?>" />$</td>
-                        </tr>
-                  </table>
-            </fieldset>
             <input type="submit" name="btnCFSettings" class="button button-primary button-large" value="Save Settings" />
       </form>
   </div>

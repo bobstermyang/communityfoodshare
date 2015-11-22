@@ -14,6 +14,9 @@ require_once("include/metabox-grocery.php");
 require_once("include/metabox-company.php");
 require_once("include/shortcodes.php");
 require_once("data/donator.php");
+require_once("payment/Braintree/Braintree.php");
+require_once("widgets/company-leader-board.php");
+
 /*
 *   Devloper Name   : Mitesh Solanki
 *   Date            : 20/11/2015
@@ -101,4 +104,13 @@ add_action( 'manage_team_posts_custom_column' , '_set_cfs_data_column_callback',
 
 add_action('wp_ajax_register_new_user', '_register_new_user_callback');
 add_action('wp_ajax_nopriv_register_new_user', '_register_new_user_callback');
+
+/*
+*   Devloper Name   : Mitesh Solanki
+*   Date            : 22/11/2015
+*   Detail          : Handle Payment Request
+*/
+
+add_action('wp_ajax_send_payment_request', '_send_payment_request_callback');
+add_action('wp_ajax_nopriv_send_payment_request', '_send_payment_request_callback');
 

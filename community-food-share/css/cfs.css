@@ -73,6 +73,7 @@ A:Hover {
     color: #616161;
 	position: relative;
 	padding: 0 12px;
+    line-height:100%;
 }
 .company-name label sup, .form-input label sup {
     color: #C30303;
@@ -81,7 +82,7 @@ A:Hover {
     width: auto;
     float: left;
     position: absolute;
-    top: 2px;
+    top: 10px;
     left: 0;
 }
 .company-name input[type="text"] {
@@ -247,7 +248,8 @@ A:Hover {
     width: 100%;
     max-width: 270px;
     display: block;
-    height: 30px;
+    height: auto;
+    padding:5px;
     /*margin-bottom: 5px;*/
 	background: #fff;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
@@ -301,18 +303,21 @@ a.nevi-right {
     float: right;
     margin: 0 auto;
 }
-.nevigation-btn input[type="button"],.nevigation-btn input[type="submit"], .yellowbtn{
-	background: #F0CC56;
-    color: #fff;
-    text-align: center;
+.nevigation-btn input[type="button"],.nevigation-btn input[type="submit"], .yellowbtn, .each-team a{
+	background: #F0CC56 !important;
+    color: #fff  !important;
+    text-align: center !important;
     border-radius: 3px;
-    padding: 7px 5px;
-	border:none;
+    padding: 7px  !important;
+	border:none  !important;
 	cursor:pointer;
-	line-height: 100%;
+	line-height: 100% !important;
+    font-size:16px;
+    text-transform: uppercase;
+    font-weight: bold !important;
 }
-.nevigation-btn input[type="button"]:hover,.nevigation-btn input[type="submit"]:hover, .yellowbtn:hover{
-	text-decoration:underline;
+.nevigation-btn input[type="button"]:hover,.nevigation-btn input[type="submit"]:hover, .yellowbtn:hover, .each-team a:hover{
+	text-decoration:underline  !important;
 }
 .btn-search {
     margin: 10px 0;
@@ -382,18 +387,51 @@ label.error{
     position: absolute;
     top: 0;
     width: 100%;
+    z-index: 99999;
+}
+.msg{
+    margin:10px auto;
+    display: inline-block;
+    width: 100%;
+}
+.msg.success{
+    background: #c4ffe8 none repeat scroll 0 0;
+    border: 1px solid #009b5f;
+    color: #009b5f;
+    font-size: 14px;
+    padding: 5px;
+}
+.msg.error{
+    background: #FFDDDD none repeat scroll 0 0;
+    border: 1px solid #C30303;
+    font-size: 14px;
+    padding: 5px;
+    color:#C30303;
+}
+.add-more-team {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.each-team {
+    clear: both;
+    margin-bottom: 5px;
 }
 
+.each-team > input{
+    display:inline-block !important;
+    margin-right:5px;
+    vertical-align: top;
+}
+a.linkcls {
+    display: inline-block;
+    font-size: 12px;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+    display: none !important;
+}
 
-
-
-
-
-
-
-
-
- 
- 
- 
- 
+#grid {
+    margin: 50px auto 0;  
+    padding:0;
+    width: 100%;
+}

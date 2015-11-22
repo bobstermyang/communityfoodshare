@@ -1,6 +1,9 @@
 <h2>Add New Donator</h2>
 <div class="wrap">
-  <?php if(isset($_POST['btnCFSDonator'])){
+  <?php
+  
+      $team_list = get_team_list();
+    if(isset($_POST['btnCFSDonator'])){
         $objDonator = new tblDonator();
         $result = $objDonator->insert($_POST['cfs_donator']);
         $message = '';
@@ -16,8 +19,8 @@
       <form action="" method="post">
           <table class="form-table">
                 <tr>
-                      <th><label for="cfs_donator[transaction_id]">Transaction ID</label></th>
-                      <td><input name="cfs_donator[transaction_id]" id="cfs_donator[transaction_id]" value="" /></td>
+                      <th><label for="cfs_donator[trans_id]">Transaction ID</label></th>
+                      <td><input name="cfs_donator[trans_id]" id="cfs_donator[trans_id]" value="" /></td>
                 </tr>
                 <tr>
                       <th><label for="cfs_donator[payment_type]">Payment Method</label></th>
@@ -29,16 +32,25 @@
                       </td>
                 </tr>
                 <tr>
-                      <th><label for="cfs_donator[donar_name]">Payer Name</label></th>
-                      <td><input name="cfs_donator[donar_name]" id="cfs_donator[donar_name]" value="" /></td>
+                      <th><label for="cfs_donator[donator_name]">Donator Name</label></th>
+                      <td><input name="cfs_donator[donator_name]" id="cfs_donator[donator_name]" value="" /></td>
                 </tr>
                 <tr>
-                      <th><label for="cfs_donator[user_role]">Payer Role</label></th>
+                      <th><label for="cfs_donator[donator_email]">Donator Email</label></th>
+                      <td><input name="cfs_donator[donator_email]" id="cfs_donator[donator_email]" value="" /></td>
+                </tr>
+                <tr>
+                      <th><label for="cfs_donator[team_id]">Team</label></th>
                       <td>
-                      <select name="cfs_donator[user_role]" id="cfs_donator[user_role]">
-                                  <option value="business">Business</option>
-                                  <option value="team">Team</option>
-                                  <option value="individual">Individual</option>
+                      <select name="cfs_donator[team_id]" id="cfs_donator[team_id]">
+                                  <option value="0"></option>
+                                  <?php
+                                    if(count($team_list) > 0){
+                                      foreach($team_list as $team){
+                                        echo '<option value="'.$team['id'].'">'.$team['name'].'</option>';
+                                      }
+                                    }
+                                  ?>
                             </select>
                       </td>
                 </tr>
