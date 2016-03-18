@@ -31,18 +31,23 @@ After a company is registered, a company page is created and the company is adde
 
 
 *Step 1:* 
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqodoszccdqderp/Donation+1.jpg" width="500">
 
 *Step 2:*
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqooaqzccdqderr/Donation+2.jpg" width="500">
 
 *Step 3:*
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqopdpzccdqdesd/presentation_2.html.jpg" width="500">
 
 *Step 4*
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqoqaszccdqdess/presentation_2.html.jpg" width="500">
 
 *Thank You*
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqoqppzccdqdoad/presentation_2.html.jpg" width="500">
 
 
