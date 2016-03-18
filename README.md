@@ -17,14 +17,19 @@ Companies can register to create a company profile to which people can donate to
 After a company is registered, a company page is created and the company is added to the main list of companies.
 
 **Registration**
-*Company Registration*
 
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrpqecdzccdqcscc/CFS.jpg" width="500">
 
+
 **Company List**
+
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqessozccdqdero/cfs_company_list.jpg" width="500">
 
+
 **Donation Process**
+
+
+
 *Step 1:* 
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrqodoszccdqderp/Donation+1.jpg" width="500">
 
