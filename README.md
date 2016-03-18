@@ -43,7 +43,6 @@ Shortcodes
 Screenshots
 -------------
 
-**Registration**
 
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrpqecdzccdqcscc/CFS.jpg" width="500">
 
