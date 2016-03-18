@@ -16,6 +16,33 @@ Companies can register to create a company profile to which people can donate to
 
 After a company is registered, a company page is created and the company is added to the main list of companies.
 
+Usage
+-------------
+
+**Production**
+The plugin isn't ready for production use.
+
+**Testing**
+You can test the plugin by downloading the zip file on the Releases page or by cloning this repo. Then you would upload it to your WordPress site like you would any other plugin
+
+> **Note:**
+
+> - Only tested on WordPress 4.4
+
+
+----------
+
+
+Shortcodes
+-------------------
+`[cfs_register]` - use this shortcode for the company registration page
+`[cfs_company_list]` - use this shortcode for the main challenge page company ranking list
+
+----------
+
+Screenshots
+-------------
+
 **Registration**
 
 <img src="https://www.diigo.com/file/image/sebcdaezdaqrpqecdzccdqcscc/CFS.jpg" width="500">
@@ -56,26 +83,4 @@ After a company is registered, a company page is created and the company is adde
 ----------
 
 
-Usage
--------------
 
-**Production**
-The plugin isn't ready for production use.
-
-**Testing**
-You can test the plugin by downloading the zip file on the Releases page or by cloning this repo. Then you would upload it to your WordPress site like you would any other plugin
-
-> **Note:**
-
-> - Only tested on WordPress 4.4
-
-
-----------
-
-
-Shortcodes
--------------------
-`[cfs_register]` - use this shortcode for the company registration page
-`[cfs_company_list]` - use this shortcode for the main challenge page company ranking list
-
-----------
